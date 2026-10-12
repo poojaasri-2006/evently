@@ -1,0 +1,32 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "node --test tests/workflows.test.js",
+    "start": "node server.js",
+    "test:browser": "node --test tests/browser.test.js",
+    "test:preferences": "node --test tests/preferences.test.js",
+    "test:vendor": "node --test tests/vendor-modules.test.js",
+    "test:organizer": "node --test tests/organizer-modules.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.12.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.6",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.4.0",
+    "pg": "^8.23.1",
+    "prisma": "^6.12.0",
+    "socket.io": "^4.8.4",
+    "zod": "^4.6.6"
+  }
+}
