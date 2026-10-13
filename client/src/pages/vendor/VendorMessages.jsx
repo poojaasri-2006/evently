@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -34,7 +35,7 @@ export const VendorMessages = () => {
   const messagesEndRef = useRef(null);
 
   const loadConversations = useCallback(async () => {
-    const response = await apiFetch('http://localhost:5000/api/messages/conversations', {
+    const response = await apiFetch(`${API_ORIGIN}/api/messages/conversations`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await response.json().catch(() => null);
@@ -65,7 +66,7 @@ export const VendorMessages = () => {
   }, [loadConversations]);
 
   const fetchMessages = useCallback(async (contactId) => {
-    const response = await apiFetch(`http://localhost:5000/api/messages/${contactId}`, {
+    const response = await apiFetch(`${API_ORIGIN}/api/messages/${contactId}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await response.json().catch(() => null);
@@ -155,7 +156,7 @@ export const VendorMessages = () => {
     setMessageError(null);
     try {
       const response = await apiFetch(
-        `http://localhost:5000/api/messages/${activeConversation.contact.id}`,
+        `${API_ORIGIN}/api/messages/${activeConversation.contact.id}`,
         {
           method: 'POST',
           headers: {

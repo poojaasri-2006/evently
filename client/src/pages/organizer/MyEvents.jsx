@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -30,7 +31,7 @@ export const MyEvents = () => {
       if (apiRevision === 0) setLoading(true);
       setError(null);
       
-      const res = await apiFetch('http://localhost:5000/api/events', {
+      const res = await apiFetch(`${API_ORIGIN}/api/events`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

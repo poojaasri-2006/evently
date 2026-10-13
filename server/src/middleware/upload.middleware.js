@@ -1,38 +1,12 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-
-const uploadDir = path.join(__dirname, '../../uploads/profiles');
-if (!fs.existsSync(uploadDir)) {
+const imageExtensions = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp', 'image/gif': '.gif' };
+const useBlob = Boolean(process.env.VERCEL || process.env.BLOB_READ_WRITE_TOKEN);
+let storage = multer.memoryStorage();
+if (!useBlob) {
+  const uploadDir = path.join(__dirname, '../../uploads/profiles');
   fs.mkdirSync(uploadDir, { recursive: true });
+  storage = multer.diskStorage({ destination: uploadDir, filename: (req, file, callback) => callback(null, 'vendor-' + req.user.id + '-' + Date.now() + '-' + Math.round(Math.random() * 1e9) + imageExtensions[file.mimetype]) });
 }
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    cb(null, `vendor-${req.user?.id || 'profile'}-${uniqueSuffix}${ext}`);
-  }
-});
-
-const fileFilter = (req, file, cb) => {
-  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-  if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only JPEG, PNG, WEBP, and GIF images are allowed'), false);
-  }
-};
-
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // 5 MB max
-  },
-  fileFilter
-});
-
-module.exports = upload;
+module.exports = multer({ storage, limits: { fileSize: 4 * 1024 * 1024 }, fileFilter: (req, file, callback) => imageExtensions[file.mimetype] ? callback(null, true) : callback(new Error('Only JPEG, PNG, WEBP, and GIF images are allowed'), false) });

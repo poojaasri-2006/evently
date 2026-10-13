@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { formatAmount } from '../../utils/currency';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
@@ -136,8 +137,8 @@ export const Bookings = () => {
   const loadData = useCallback(async () => {
     const headers = { Authorization: `Bearer ${token}` };
     const [bookingsResponse, quotesResponse] = await Promise.all([
-      apiFetch('http://localhost:5000/api/bookings', { headers }),
-      apiFetch('http://localhost:5000/api/quotes', { headers })
+      apiFetch(`${API_ORIGIN}/api/bookings`, { headers }),
+      apiFetch(`${API_ORIGIN}/api/quotes`, { headers })
     ]);
     const [bookingsData, quotesData] = await Promise.all([
       bookingsResponse.json().catch(() => ({})),
@@ -200,7 +201,7 @@ export const Bookings = () => {
     setDecidingQuote({ id: quote.id, status });
     setActionMessage({ type: '', text: '' });
     try {
-      const response = await apiFetch(`http://localhost:5000/api/quotes/${quote.id}/status`, {
+      const response = await apiFetch(`${API_ORIGIN}/api/quotes/${quote.id}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -220,7 +221,7 @@ export const Bookings = () => {
       if (status === 'ACCEPTED' && quote.inquiry?.event?.id) {
         try {
           const budgetResponse = await apiFetch(
-            `http://localhost:5000/api/events/${quote.inquiry.event.id}/budget`,
+            `${API_ORIGIN}/api/events/${quote.inquiry.event.id}/budget`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           const budget = await budgetResponse.json().catch(() => null);

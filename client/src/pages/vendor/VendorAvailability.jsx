@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -68,7 +69,7 @@ export const VendorAvailability = () => {
     try {
       if (apiRevision === 0) setLoading(true);
       setError(null);
-      const res = await apiFetch('http://localhost:5000/api/vendor/availability', {
+      const res = await apiFetch(`${API_ORIGIN}/api/vendor/availability`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -177,7 +178,7 @@ export const VendorAvailability = () => {
 
       const dateStr = formatDateKey(selectedDate);
 
-      const res = await apiFetch('http://localhost:5000/api/vendor/availability', {
+      const res = await apiFetch(`${API_ORIGIN}/api/vendor/availability`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -215,7 +216,7 @@ export const VendorAvailability = () => {
 
     try {
       setSaving(true);
-      const res = await apiFetch(`http://localhost:5000/api/vendor/availability/${currentEntryId}`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/vendor/availability/${currentEntryId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

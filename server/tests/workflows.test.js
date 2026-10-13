@@ -6,9 +6,9 @@ require('dotenv').config({ quiet: true });
 const prisma = require('../src/utils/prisma');
 const app = require('../src/app');
 const { deleteAccountData } = require('../src/utils/deleteAccountData');
-const { chromium, expect: baseExpect } = require('../../client/node_modules/@playwright/test');
+const { chromium, expect: baseExpect } = require('@playwright/test');
 const expect = baseExpect.configure({ timeout: 30000 });
-const { io: socketClient } = require('../../client/node_modules/socket.io-client');
+const { io: socketClient } = require('socket.io-client');
 const jwt = require('jsonwebtoken');
 
 test('organizer and vendor workflows against isolated test accounts', { timeout: 1200000 }, async t => {

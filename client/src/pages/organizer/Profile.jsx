@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { apiFetchFresh as apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
@@ -24,7 +25,7 @@ export const Profile = () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await apiFetch('http://localhost:5000/api/profile', {
+      const res = await apiFetch(`${API_ORIGIN}/api/profile`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Failed to fetch profile');
@@ -54,7 +55,7 @@ export const Profile = () => {
       setError(null);
       setSuccess(false);
 
-      const res = await apiFetch('http://localhost:5000/api/profile/organizer', {
+      const res = await apiFetch(`${API_ORIGIN}/api/profile/organizer`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',

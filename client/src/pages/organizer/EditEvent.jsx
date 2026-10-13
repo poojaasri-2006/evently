@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { apiFetchFresh as apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -38,7 +39,7 @@ export const EditEvent = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await apiFetch(`http://localhost:5000/api/events/${id}`, {
+        const res = await apiFetch(`${API_ORIGIN}/api/events/${id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Failed to load event');
@@ -72,7 +73,7 @@ export const EditEvent = () => {
     setSaving(true);
     setError(null);
     try {
-      const res = await apiFetch(`http://localhost:5000/api/events/${id}`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/events/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

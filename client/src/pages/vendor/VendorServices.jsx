@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -36,10 +37,10 @@ export const VendorServices = () => {
       setError(null);
       
       const [servicesRes, categoriesRes] = await Promise.all([
-        apiFetch('http://localhost:5000/api/vendor/services', {
+        apiFetch(`${API_ORIGIN}/api/vendor/services`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }),
-        apiFetch('http://localhost:5000/api/vendors/categories', {
+        apiFetch(`${API_ORIGIN}/api/vendors/categories`, {
           headers: { 'Authorization': `Bearer ${token}` }
         })
       ]);
@@ -96,8 +97,8 @@ export const VendorServices = () => {
       setSaving(true);
       
       const endpoint = editingService 
-        ? `http://localhost:5000/api/vendor/services/${editingService.id}`
-        : 'http://localhost:5000/api/vendor/services';
+        ? `${API_ORIGIN}/api/vendor/services/${editingService.id}`
+        : `${API_ORIGIN}/api/vendor/services`;
         
       const method = editingService ? 'PATCH' : 'POST';
 
@@ -135,7 +136,7 @@ export const VendorServices = () => {
     if (!window.confirm('Are you sure you want to delete this service?')) return;
     
     try {
-      const res = await apiFetch(`http://localhost:5000/api/vendor/services/${id}`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/vendor/services/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

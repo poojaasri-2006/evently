@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { apiFetchFresh as apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useNavigate, useLocation, Link } from 'react-router-dom';
@@ -88,7 +89,7 @@ export const VendorSendQuote = () => {
     setCurrentInquiryId(null); setInquiryData(null); setInquiryError(null);
     setActiveTab('FORM'); setLoadingInquiry(true);
     let active = true;
-    apiFetch('http://localhost:5000/api/quotes/' + params.id, { headers: { Authorization: 'Bearer ' + token } })
+    apiFetch(`${API_ORIGIN}/api/quotes/` + params.id, { headers: { Authorization: 'Bearer ' + token } })
       .then(async response => { if (!response.ok) throw new Error('Quote not found'); return response.json(); })
       .then(quote => { if (active) { setCurrentInquiryId(quote.inquiryId); setActiveTab('FORM'); } })
       .catch(error => { if (active) { setInquiryError(error.message); setLoadingInquiry(false); } });
@@ -110,8 +111,8 @@ export const VendorSendQuote = () => {
       try {
         const headers = { Authorization: `Bearer ${token}` };
         const [pkgRes, svcRes] = await Promise.all([
-          apiFetch('http://localhost:5000/api/vendor/packages', { headers }),
-          apiFetch('http://localhost:5000/api/vendor/services', { headers })
+          apiFetch(`${API_ORIGIN}/api/vendor/packages`, { headers }),
+          apiFetch(`${API_ORIGIN}/api/vendor/services`, { headers })
         ]);
         if (pkgRes.ok) {
           const pkgData = await pkgRes.json();
@@ -139,8 +140,8 @@ export const VendorSendQuote = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [quotesRes, reqsRes] = await Promise.all([
-        apiFetch('http://localhost:5000/api/quotes', { headers }),
-        apiFetch('http://localhost:5000/api/vendor/requests', { headers })
+        apiFetch(`${API_ORIGIN}/api/quotes`, { headers }),
+        apiFetch(`${API_ORIGIN}/api/vendor/requests`, { headers })
       ]);
 
       if (quotesRes.ok) {
@@ -174,7 +175,7 @@ export const VendorSendQuote = () => {
       setInquiryError(null);
       setSubmitError(null);
 
-      const res = await apiFetch(`http://localhost:5000/api/vendor/requests/${id}`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/vendor/requests/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -280,7 +281,7 @@ export const VendorSendQuote = () => {
       let res;
       if (existingQuoteId) {
         // Edit existing quote
-        res = await apiFetch(`http://localhost:5000/api/quotes/${existingQuoteId}`, {
+        res = await apiFetch(`${API_ORIGIN}/api/quotes/${existingQuoteId}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -293,7 +294,7 @@ export const VendorSendQuote = () => {
         });
       } else {
         // Submit new quote
-        res = await apiFetch('http://localhost:5000/api/quotes', {
+        res = await apiFetch(`${API_ORIGIN}/api/quotes`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

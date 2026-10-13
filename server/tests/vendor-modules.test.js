@@ -11,7 +11,7 @@ const prisma = require('../src/utils/prisma');
 const app = require('../src/app');
 const { deleteAccountData } = require('../src/utils/deleteAccountData');
 const { dateKey } = require('../src/utils/bookingAvailability');
-const { chromium, expect: baseExpect } = require('../../client/node_modules/@playwright/test');
+const { chromium, expect: baseExpect } = require('@playwright/test');
 const expect = baseExpect.configure({ timeout: 30000 });
 
 test('vendor actions, isolated permissions, exact results, and browser interactions', { timeout: 600000 }, async () => {

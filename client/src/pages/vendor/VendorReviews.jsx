@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -33,7 +34,7 @@ export const VendorReviews = () => {
     const fetchData = async () => {
       try {
         // 1. Get own profile to find the vendor profile id
-        const profileRes = await apiFetch('http://localhost:5000/api/profile', {
+        const profileRes = await apiFetch(`${API_ORIGIN}/api/profile`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!profileRes.ok) throw new Error('Failed to load profile');
@@ -46,7 +47,7 @@ export const VendorReviews = () => {
         }
 
         // 2. Get vendor details with reviews
-        const vendorRes = await apiFetch(`http://localhost:5000/api/vendors/${profile.vendorProfile.id}`, {
+        const vendorRes = await apiFetch(`${API_ORIGIN}/api/vendors/${profile.vendorProfile.id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!vendorRes.ok) throw new Error('Failed to load reviews');

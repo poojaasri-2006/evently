@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -66,7 +67,7 @@ export const CreateEvent = () => {
     setLoading(true);
 
     try {
-      const response = await apiFetch('http://localhost:5000/api/events', {
+      const response = await apiFetch(`${API_ORIGIN}/api/events`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

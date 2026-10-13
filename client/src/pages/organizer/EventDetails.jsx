@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -30,7 +31,7 @@ export const EventDetails = () => {
         const headers = { 'Authorization': `Bearer ${token}` };
         
         // Fetch Event Details
-        const eventRes = await apiFetch(`http://localhost:5000/api/events/${id}`, { headers });
+        const eventRes = await apiFetch(`${API_ORIGIN}/api/events/${id}`, { headers });
         if (!eventRes.ok) {
           if (eventRes.status === 404) throw new Error('Event not found.');
           throw new Error('Unable to load event.');

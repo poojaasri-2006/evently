@@ -4,5 +4,24 @@
   },
   "dependencies": {
     "@prisma/client": "^6.12.0"
+  },
+  "name": "evently",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "postinstall": "prisma generate --schema prisma/schema.prisma",
+    "build": "npm run build --workspace client",
+    "vercel-build": "npm run build",
+    "dev": "npm run dev --workspace client",
+    "start": "npm start --workspace server",
+    "db:deploy": "prisma migrate deploy --schema prisma/schema.prisma",
+    "images:migrate": "node server/scripts/migrate-profile-images.js"
   }
 }

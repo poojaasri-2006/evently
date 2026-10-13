@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -62,7 +63,7 @@ export const VendorRequests = () => {
     try {
       if (apiRevision === 0) setLoading(true);
       setError(null);
-      const res = await apiFetch('http://localhost:5000/api/vendor/requests', {
+      const res = await apiFetch(`${API_ORIGIN}/api/vendor/requests`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -100,7 +101,7 @@ export const VendorRequests = () => {
       setActionError(null);
       setActionSuccess(null);
 
-      const res = await apiFetch(`http://localhost:5000/api/vendor/requests/${requestId}/status`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/vendor/requests/${requestId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -159,7 +160,7 @@ export const VendorRequests = () => {
       setSubmittingQuote(true);
       setQuoteError(null);
 
-      const res = await apiFetch('http://localhost:5000/api/quotes', {
+      const res = await apiFetch(`${API_ORIGIN}/api/quotes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

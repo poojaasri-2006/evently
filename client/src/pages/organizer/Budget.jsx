@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { apiFetch, apiFetchFresh } from '../../utils/api.js';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
@@ -30,7 +31,7 @@ export const Budget = () => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const res = await apiFetch('http://localhost:5000/api/events', {
+        const res = await apiFetch(`${API_ORIGIN}/api/events`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Failed to fetch events');
@@ -55,7 +56,7 @@ export const Budget = () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await apiFetchFresh(`http://localhost:5000/api/events/${selectedEventId}/budget`, {
+      const res = await apiFetchFresh(`${API_ORIGIN}/api/events/${selectedEventId}/budget`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Failed to fetch budget');
@@ -81,7 +82,7 @@ export const Budget = () => {
       const val = parseFloat(totalBudgetInput);
       if (isNaN(val) || val < 0) return alert('Invalid amount');
       
-      const res = await apiFetch(`http://localhost:5000/api/events/${selectedEventId}/budget`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/events/${selectedEventId}/budget`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -104,7 +105,7 @@ export const Budget = () => {
       if (isNaN(amt) || amt < 0) return alert('Invalid amount');
       if (!newItemCategory.trim()) return alert('Category is required');
 
-      const res = await apiFetch(`http://localhost:5000/api/events/${selectedEventId}/budget/items`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/events/${selectedEventId}/budget/items`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -131,7 +132,7 @@ export const Budget = () => {
   const handleDeleteItem = async (itemId) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     try {
-      const res = await apiFetch(`http://localhost:5000/api/events/${selectedEventId}/budget/items/${itemId}`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/events/${selectedEventId}/budget/items/${itemId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

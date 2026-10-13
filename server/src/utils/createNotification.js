@@ -3,6 +3,7 @@
  * All arguments are optional FKs except userId, title, and content.
  */
 const prisma = require('./prisma');
+const { flushRedisPublishes } = require('./redis');
 
 const createNotification = async ({
   req,
@@ -41,6 +42,8 @@ const createNotification = async ({
       }
     });
     req?.app?.get('io')?.to(`user:${userId}`).emit('notification', notification);
+    // Let Redis accept the notification before the API function can finish.
+    await flushRedisPublishes();
     return notification;
   } catch (err) {
     // Notification creation is non-critical — log but don't crash the parent request

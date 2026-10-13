@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { formatAmount } from '../../utils/currency';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
@@ -27,7 +28,7 @@ export const Quotes = () => {
   const [actionMessage, setActionMessage] = useState({ type: '', text: '' });
 
   const loadQuotes = useCallback(async () => {
-    const response = await apiFetch('http://localhost:5000/api/quotes', {
+    const response = await apiFetch(`${API_ORIGIN}/api/quotes`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await response.json().catch(() => ({}));
@@ -91,7 +92,7 @@ export const Quotes = () => {
     setActionMessage({ type: '', text: '' });
     
     try {
-      const res = await apiFetch(`http://localhost:5000/api/quotes/${id}/status`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/quotes/${id}/status`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
@@ -116,7 +117,7 @@ export const Quotes = () => {
         const eventId = quote?.inquiry?.event?.id;
         if (eventId) {
           try {
-            const budgetResponse = await apiFetch(`http://localhost:5000/api/events/${eventId}/budget`, {
+            const budgetResponse = await apiFetch(`${API_ORIGIN}/api/events/${eventId}/budget`, {
               headers: { Authorization: `Bearer ${token}` }
             });
             const budget = await budgetResponse.json().catch(() => null);

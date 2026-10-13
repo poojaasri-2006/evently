@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../utils/config.js';
 import { apiFetch } from '../utils/api.js';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
@@ -14,7 +15,7 @@ export const DeleteAccount = () => {
     if (!window.confirm('Delete your account and its events, bookings, messages, and profile permanently?')) return;
     setBusy(true); setError('');
     try {
-      const res = await apiFetch('http://localhost:5000/api/profile/delete-account', { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) });
+      const res = await apiFetch(`${API_ORIGIN}/api/profile/delete-account`, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Unable to delete account');
       logout();

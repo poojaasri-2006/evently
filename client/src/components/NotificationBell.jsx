@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../utils/config.js';
 import { apiFetch } from '../utils/api.js';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -10,7 +11,7 @@ export const NotificationBell = () => {
     let active = true;
     const refresh = async () => {
       try {
-        const res = await apiFetch('http://localhost:5000/api/notifications/unread-count', { headers: { Authorization: 'Bearer ' + token } });
+        const res = await apiFetch(`${API_ORIGIN}/api/notifications/unread-count`, { headers: { Authorization: 'Bearer ' + token } });
         if (res.ok) { const data = await res.json(); if (active) setCount(data.count); }
       } catch { /* The next refresh retries transient failures. */ }
     };

@@ -8,7 +8,7 @@ require('dotenv').config({ quiet: true });
 const prisma = require('../src/utils/prisma');
 const app = require('../src/app');
 const { deleteAccountData } = require('../src/utils/deleteAccountData');
-const { chromium, expect: baseExpect } = require('../../client/node_modules/@playwright/test');
+const { chromium, expect: baseExpect } = require('@playwright/test');
 const expect = baseExpect.configure({ timeout: 30000 });
 
 test('public, organizer, and vendor browser workflows', { timeout: 600000 }, async () => {
@@ -34,6 +34,7 @@ test('public, organizer, and vendor browser workflows', { timeout: 600000 }, asy
   };
   const newContext = async token => {
     const context = await browser.newContext({ timezoneId: 'Asia/Kolkata', viewport: { width: 1280, height: 800 } });
+    context.setDefaultTimeout(30000);
     if (token) await context.addInitScript(value => localStorage.setItem('evently_token', value), token);
     await context.route('http://localhost:5000/api/**', proxy);
     return context;

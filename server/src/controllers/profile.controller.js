@@ -1,5 +1,6 @@
 const prisma = require('../utils/prisma');
 const bcrypt = require('bcrypt');
+const { saveProfileImage } = require('../utils/profileImages');
 const { deleteAccountData } = require('../utils/deleteAccountData');
 
 const getProfile = async (req, res) => {
@@ -190,9 +191,7 @@ const uploadVendorImage = async (req, res) => {
       return res.status(404).json({ message: 'Vendor profile not found' });
     }
 
-    const protocol = req.protocol;
-    const host = req.get('host');
-    const imageUrl = `${protocol}://${host}/uploads/profiles/${req.file.filename}`;
+    const imageUrl = await saveProfileImage(req, req.file, userId);
 
     const updatedProfile = await prisma.vendorProfile.update({
       where: { id: user.vendorProfile.id },
@@ -207,7 +206,7 @@ const uploadVendorImage = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error uploading profile image' });
+    res.status(error.status || 500).json({ message: error.status ? error.message : 'Error uploading profile image' });
   }
 };
 

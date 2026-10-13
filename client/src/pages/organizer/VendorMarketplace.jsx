@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -45,10 +46,10 @@ export const VendorMarketplace = () => {
       const headers = { 'Authorization': `Bearer ${token}` };
       
       const [vendorsRes, categoriesRes, shortlistsRes, eventsRes] = await Promise.all([
-        apiFetch('http://localhost:5000/api/vendors', { headers }),
-        apiFetch('http://localhost:5000/api/vendors/categories', { headers }),
-        apiFetch('http://localhost:5000/api/shortlist', { headers }),
-        apiFetch('http://localhost:5000/api/events', { headers })
+        apiFetch(`${API_ORIGIN}/api/vendors`, { headers }),
+        apiFetch(`${API_ORIGIN}/api/vendors/categories`, { headers }),
+        apiFetch(`${API_ORIGIN}/api/shortlist`, { headers }),
+        apiFetch(`${API_ORIGIN}/api/events`, { headers })
       ]);
 
       if (!vendorsRes.ok) throw new Error('Failed to fetch vendors');
@@ -93,7 +94,7 @@ export const VendorMarketplace = () => {
     setModalError('');
 
     try {
-      const res = await apiFetch('http://localhost:5000/api/shortlist', {
+      const res = await apiFetch(`${API_ORIGIN}/api/shortlist`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

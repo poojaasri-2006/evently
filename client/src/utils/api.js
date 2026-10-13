@@ -1,3 +1,4 @@
+import { API_ORIGIN, URL_BASE } from './config.js';
 const cache = new Map();
 const pending = new Map();
 const listeners = new Set();
@@ -5,7 +6,7 @@ const FRESH_AGE = 30000;
 const RETAIN_AGE = 300000;
 let generation = 0;
 export const subscribeApiUpdates = listener => { listeners.add(listener); return () => listeners.delete(listener); };
-const publish = entry => { for (const listener of listeners) listener({ path: new URL(entry.url, 'http://localhost:5000').pathname, authorization: entry.authorization }); };
+const publish = entry => { for (const listener of listeners) listener({ path: new URL(entry.url, URL_BASE).pathname, authorization: entry.authorization }); };
 export const clearApiCache = () => { generation++; cache.clear(); pending.clear(); };
 export const markApiCacheStale = () => { for (const entry of cache.values()) { entry.freshUntil = 0; publish(entry); } };
 const forCaller = (promise, signal) => {
@@ -50,7 +51,7 @@ export const apiFetch = (input, options = {}) => {
     const invalidate = area ? () => {
       generation++;
       pending.clear();
-      for (const [key, entry] of cache) if (new URL(entry.url, 'http://localhost:5000').pathname.startsWith('/api/' + area)) cache.delete(key);
+      for (const [key, entry] of cache) if (new URL(entry.url, URL_BASE).pathname.startsWith('/api/' + area)) cache.delete(key);
     } : clearApiCache;
     invalidate();
     return fetch(input, options).finally(invalidate);
@@ -71,7 +72,7 @@ export const prefetchModule = (route, token) => {
   const vendor = { messages: ['messages/conversations'], notifications: ['notifications'], dashboard: ['vendor-dashboard'], profile: ['profile','vendors/categories'], services: ['vendor/services','vendors/categories'], packages: ['vendor/packages','vendor/services','vendors/categories'], availability: ['vendor/availability'], requests: ['vendor/requests'], quotes: ['quotes','vendor/requests','vendor/packages','vendor/services'], bookings: ['vendor/bookings'], reviews: ['profile'], earnings: ['vendor-dashboard'], settings: ['profile/notification-preferences'] };
   const parts = route.split('/').filter(Boolean);
   const endpoints = (parts[0] === 'organizer' ? organizer : vendor)[parts[1]] || [];
-  for (const endpoint of endpoints) void apiFetch('http://localhost:5000/api/' + endpoint, { headers: { Authorization: 'Bearer ' + token } }).catch(() => {});
+  for (const endpoint of endpoints) void apiFetch(`${API_ORIGIN}/api/` + endpoint, { headers: { Authorization: 'Bearer ' + token } }).catch(() => {});
 };
 
 export const warmModules = (role, token) => {
@@ -82,7 +83,7 @@ export const warmModules = (role, token) => {
   const worker = async () => {
     while (!cancelled && index < endpoints.length) {
       const endpoint = endpoints[index++];
-      try { await apiFetch('http://localhost:5000/api/' + endpoint, { headers: { Authorization: 'Bearer ' + token } }); } catch { /* A module retries when opened. */ }
+      try { await apiFetch(`${API_ORIGIN}/api/` + endpoint, { headers: { Authorization: 'Bearer ' + token } }); } catch { /* A module retries when opened. */ }
     }
   };
   const timer = window.setTimeout(() => { void worker(); void worker(); }, 750);

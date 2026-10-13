@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../utils/config.js';
 import { apiFetch } from '../utils/api.js';
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
@@ -16,7 +17,7 @@ export const PublicVendorDetails = () => {
   useEffect(() => {
     const fetchVendor = async () => {
       try {
-        const res = await apiFetch(`http://localhost:5000/api/vendors/${id}`);
+        const res = await apiFetch(`${API_ORIGIN}/api/vendors/${id}`);
         if (!res.ok) throw new Error('Vendor not found');
         const data = await res.json();
         setVendor(data);

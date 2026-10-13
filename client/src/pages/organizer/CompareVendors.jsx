@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -32,7 +33,7 @@ export const CompareVendors = () => {
       setError(null);
       const headers = { 'Authorization': `Bearer ${token}` };
       
-      const res = await apiFetch('http://localhost:5000/api/shortlist', { headers });
+      const res = await apiFetch(`${API_ORIGIN}/api/shortlist`, { headers });
       if (!res.ok) throw new Error('Failed to fetch shortlist');
       
       const data = await res.json();

@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { formatAmount } from '../../utils/currency';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
@@ -19,7 +20,7 @@ export const VendorEarnings = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await apiFetch('http://localhost:5000/api/vendor-dashboard', {
+        const res = await apiFetch(`${API_ORIGIN}/api/vendor-dashboard`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Failed to load earnings');

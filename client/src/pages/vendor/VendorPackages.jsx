@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -39,9 +40,9 @@ export const VendorPackages = () => {
       
       const headers = { 'Authorization': `Bearer ${token}` };
       const [packagesRes, categoriesRes, servicesRes] = await Promise.all([
-        apiFetch('http://localhost:5000/api/vendor/packages', { headers }),
-        apiFetch('http://localhost:5000/api/vendors/categories', { headers }),
-        apiFetch('http://localhost:5000/api/vendor/services', { headers })
+        apiFetch(`${API_ORIGIN}/api/vendor/packages`, { headers }),
+        apiFetch(`${API_ORIGIN}/api/vendors/categories`, { headers }),
+        apiFetch(`${API_ORIGIN}/api/vendor/services`, { headers })
       ]);
 
       if (!packagesRes.ok) throw new Error('Failed to load packages');
@@ -113,8 +114,8 @@ export const VendorPackages = () => {
       setFormError(null);
       
       const endpoint = editingPackage 
-        ? `http://localhost:5000/api/vendor/packages/${editingPackage.id}`
-        : 'http://localhost:5000/api/vendor/packages';
+        ? `${API_ORIGIN}/api/vendor/packages/${editingPackage.id}`
+        : `${API_ORIGIN}/api/vendor/packages`;
         
       const method = editingPackage ? 'PATCH' : 'POST';
 
@@ -152,7 +153,7 @@ export const VendorPackages = () => {
     if (!window.confirm('Are you sure you want to delete this package?')) return;
     
     try {
-      const res = await apiFetch(`http://localhost:5000/api/vendor/packages/${id}`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/vendor/packages/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

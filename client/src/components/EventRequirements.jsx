@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../utils/config.js';
 import { apiFetch } from '../utils/api.js';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
@@ -13,7 +14,7 @@ export const EventRequirements = ({ eventId, requirements, onChange }) => {
   const save = async (method, id, body) => {
     setBusy(true); setError('');
     try {
-      const res = await apiFetch('http://localhost:5000/api/events/' + eventId + '/requirements' + (id ? '/' + id : ''), { method, headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, ...(body ? { body: JSON.stringify(body) } : {}) });
+      const res = await apiFetch(`${API_ORIGIN}/api/events/` + eventId + '/requirements' + (id ? '/' + id : ''), { method, headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, ...(body ? { body: JSON.stringify(body) } : {}) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Unable to save requirement');
       onChange(method === 'DELETE' ? requirements.filter(r => r.id !== id) : id ? requirements.map(r => r.id === id ? data : r) : [...requirements, data]);

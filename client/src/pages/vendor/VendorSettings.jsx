@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { apiFetchFresh as apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
@@ -38,7 +39,7 @@ export const VendorSettings = () => {
   useEffect(() => {
     const fetchPrefs = async () => {
       try {
-        const res = await apiFetch('http://localhost:5000/api/profile/notification-preferences', {
+        const res = await apiFetch(`${API_ORIGIN}/api/profile/notification-preferences`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
@@ -62,7 +63,7 @@ export const VendorSettings = () => {
   const handleSavePrefs = async () => {
     setSavingPrefs(true);
     try {
-      const res = await apiFetch('http://localhost:5000/api/profile/notification-preferences', {
+      const res = await apiFetch(`${API_ORIGIN}/api/profile/notification-preferences`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ export const VendorSettings = () => {
     }
     setSavingPwd(true);
     try {
-      const res = await apiFetch('http://localhost:5000/api/profile/password', {
+      const res = await apiFetch(`${API_ORIGIN}/api/profile/password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

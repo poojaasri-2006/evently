@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -30,7 +31,7 @@ export const VendorDashboard = () => {
     const fetchDashboard = async () => {
       try {
         if (apiRevision === 0) setLoading(true);
-        const res = await apiFetch('http://localhost:5000/api/vendor-dashboard', {
+        const res = await apiFetch(`${API_ORIGIN}/api/vendor-dashboard`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Failed to load dashboard data');

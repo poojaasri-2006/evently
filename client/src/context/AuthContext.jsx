@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../utils/config.js';
 import { apiFetch, clearApiCache } from '../utils/api.js';
 import { createContext, useContext, useState, useEffect } from 'react';
 const AuthContext = createContext(null);
@@ -18,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true); setAuthError('');
     const fetchUser = async () => {
       try {
-        const response = await apiFetch('http://localhost:5000/api/auth/me', { headers: { Authorization: 'Bearer ' + token }, signal: controller.signal });
+        const response = await apiFetch(`${API_ORIGIN}/api/auth/me`, { headers: { Authorization: 'Bearer ' + token }, signal: controller.signal });
         if (response.status === 401 || response.status === 404) { setToken(null); return; }
         if (!response.ok) throw new Error('Unable to verify your session. Please try again.');
         const data = await response.json();
@@ -31,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     return () => controller.abort();
   }, [token, retry]);
   const login = async (email, password) => {
-    const response = await apiFetch('http://localhost:5000/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+    const response = await apiFetch(`${API_ORIGIN}/api/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
     const data = await response.json();
     if (!response.ok) return { success: false, message: data.message };
     setAuthError(''); setToken(data.token); setUser(data.user);
@@ -39,7 +40,7 @@ export const AuthProvider = ({ children }) => {
     return { success: true, user: data.user };
   };
   const refreshUser = async () => {
-    const response = await apiFetch('http://localhost:5000/api/auth/me', { headers: { Authorization: 'Bearer ' + token } });
+    const response = await apiFetch(`${API_ORIGIN}/api/auth/me`, { headers: { Authorization: 'Bearer ' + token } });
     if (!response.ok) throw new Error('Unable to refresh your profile.');
     const data = await response.json();
     setUser(data); localStorage.setItem('evently_user', JSON.stringify(data));

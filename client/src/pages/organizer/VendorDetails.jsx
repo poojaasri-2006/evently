@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
@@ -44,9 +45,9 @@ export const VendorDetails = () => {
       const headers = { 'Authorization': `Bearer ${token}` };
       
       const [vendorRes, shortlistsRes, eventsRes] = await Promise.all([
-        apiFetch(`http://localhost:5000/api/vendors/${id}`, { headers }),
-        apiFetch('http://localhost:5000/api/shortlist', { headers }),
-        apiFetch('http://localhost:5000/api/events', { headers })
+        apiFetch(`${API_ORIGIN}/api/vendors/${id}`, { headers }),
+        apiFetch(`${API_ORIGIN}/api/shortlist`, { headers }),
+        apiFetch(`${API_ORIGIN}/api/events`, { headers })
       ]);
 
       if (!vendorRes.ok) {
@@ -86,7 +87,7 @@ export const VendorDetails = () => {
     setActionSuccess('');
 
     try {
-      const res = await apiFetch('http://localhost:5000/api/shortlist', {
+      const res = await apiFetch(`${API_ORIGIN}/api/shortlist`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +130,7 @@ export const VendorDetails = () => {
     setActionSuccess('');
 
     try {
-      const res = await apiFetch('http://localhost:5000/api/inquiries', {
+      const res = await apiFetch(`${API_ORIGIN}/api/inquiries`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -173,7 +174,7 @@ export const VendorDetails = () => {
     setReviewSubmitting(true);
     setActionError('');
     try {
-      const res = await apiFetch('http://localhost:5000/api/reviews', {
+      const res = await apiFetch(`${API_ORIGIN}/api/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -23,7 +24,7 @@ export const QuoteDetails = () => {
   useEffect(() => {
     const fetchQuote = async () => {
       try {
-        const res = await apiFetch(`http://localhost:5000/api/quotes/${id}`, {
+        const res = await apiFetch(`${API_ORIGIN}/api/quotes/${id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Failed to load quote');
@@ -41,7 +42,7 @@ export const QuoteDetails = () => {
   const updateStatus = async (status) => {
     setActing(true);
     try {
-      const res = await apiFetch(`http://localhost:5000/api/quotes/${id}/status`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/quotes/${id}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

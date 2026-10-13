@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
@@ -28,7 +29,7 @@ export const Messages = () => {
   const messagesEndRef = useRef(null);
 
   const loadConversations = useCallback(async () => {
-      const res = await apiFetch('http://localhost:5000/api/messages/conversations', {
+      const res = await apiFetch(`${API_ORIGIN}/api/messages/conversations`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -83,7 +84,7 @@ export const Messages = () => {
   }, [loadConversations]);
 
   const loadMessages = useCallback(async (contactId) => {
-    const res = await apiFetch(`http://localhost:5000/api/messages/${contactId}`, {
+    const res = await apiFetch(`${API_ORIGIN}/api/messages/${contactId}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!res.ok) {
@@ -147,7 +148,7 @@ export const Messages = () => {
     setSendError('');
 
     try {
-      const res = await apiFetch(`http://localhost:5000/api/messages/${activeContact.id}`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/messages/${activeContact.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

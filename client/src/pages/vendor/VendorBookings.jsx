@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { formatAmount } from '../../utils/currency';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
@@ -109,7 +110,7 @@ export const VendorBookings = () => {
   const [statusFilter, setStatusFilter] = useState('ALL');
 
   const loadBookings = useCallback(async () => {
-    const response = await apiFetch('http://localhost:5000/api/vendor/bookings', {
+    const response = await apiFetch(`${API_ORIGIN}/api/vendor/bookings`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await readApiResponse(response);
@@ -120,7 +121,7 @@ export const VendorBookings = () => {
   }, [token, apiRevision]);
 
   const loadBookingDetails = useCallback(async (id) => {
-    const response = await apiFetch(`http://localhost:5000/api/vendor/bookings/${id}`, {
+    const response = await apiFetch(`${API_ORIGIN}/api/vendor/bookings/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await readApiResponse(response);

@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -32,10 +33,10 @@ export const OrganizerDashboard = () => {
       const headers = { 'Authorization': `Bearer ${token}` };
 
       const [eventsRes, inquiriesRes, bookingsRes, vendorsRes] = await Promise.all([
-        apiFetch('http://localhost:5000/api/events', { headers }),
-        apiFetch('http://localhost:5000/api/inquiries', { headers }),
-        apiFetch('http://localhost:5000/api/bookings', { headers }),
-        apiFetch('http://localhost:5000/api/vendors', { headers })
+        apiFetch(`${API_ORIGIN}/api/events`, { headers }),
+        apiFetch(`${API_ORIGIN}/api/inquiries`, { headers }),
+        apiFetch(`${API_ORIGIN}/api/bookings`, { headers }),
+        apiFetch(`${API_ORIGIN}/api/vendors`, { headers })
       ]);
       if (![eventsRes, inquiriesRes, bookingsRes, vendorsRes].every(response => response.ok)) throw new Error('Unable to load dashboard data');
       // Fetch Events

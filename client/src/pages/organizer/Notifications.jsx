@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -40,7 +41,7 @@ export const Notifications = () => {
     try {
       if (apiRevision === 0) setLoading(true);
       setError(null);
-      const res = await apiFetch('http://localhost:5000/api/notifications', {
+      const res = await apiFetch(`${API_ORIGIN}/api/notifications`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Failed to fetch notifications');
@@ -60,7 +61,7 @@ export const Notifications = () => {
     // eslint-disable-next-line
     const refresh = async () => {
       try {
-        const res = await apiFetch('http://localhost:5000/api/notifications', { headers: { Authorization: 'Bearer ' + token } });
+        const res = await apiFetch(`${API_ORIGIN}/api/notifications`, { headers: { Authorization: 'Bearer ' + token } });
         if (res.ok) setNotifications(await res.json());
       } catch { /* Keep the existing list during transient failures. */ }
     };
@@ -71,7 +72,7 @@ export const Notifications = () => {
 
   const handleMarkAsRead = async (id) => {
     try {
-      const res = await apiFetch(`http://localhost:5000/api/notifications/${id}/read`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/notifications/${id}/read`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -86,7 +87,7 @@ export const Notifications = () => {
 
   const handleMarkAllAsRead = async () => {
     try {
-      const res = await apiFetch('http://localhost:5000/api/notifications/read-all', {
+      const res = await apiFetch(`${API_ORIGIN}/api/notifications/read-all`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });

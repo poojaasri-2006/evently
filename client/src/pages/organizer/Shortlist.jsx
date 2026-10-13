@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -35,8 +36,8 @@ export const Shortlist = () => {
       const headers = { 'Authorization': `Bearer ${token}` };
       
       const [shortlistsRes, eventsRes] = await Promise.all([
-        apiFetch('http://localhost:5000/api/shortlist', { headers }),
-        apiFetch('http://localhost:5000/api/events', { headers })
+        apiFetch(`${API_ORIGIN}/api/shortlist`, { headers }),
+        apiFetch(`${API_ORIGIN}/api/events`, { headers })
       ]);
 
       if (!shortlistsRes.ok) throw new Error('Failed to fetch shortlist');
@@ -67,7 +68,7 @@ export const Shortlist = () => {
     setActionError('');
     
     try {
-      const res = await apiFetch(`http://localhost:5000/api/shortlist/${id}`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/shortlist/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

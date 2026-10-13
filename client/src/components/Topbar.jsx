@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../utils/config.js';
 import { apiFetch } from '../utils/api.js';
 import React, { useState, useEffect } from 'react';
 import { Button } from './Button';
@@ -13,7 +14,7 @@ export const Topbar = () => {
   const fetchUnread = async () => {
     if (!token) return;
     try {
-      const res = await apiFetch('http://localhost:5000/api/notifications', {
+      const res = await apiFetch(`${API_ORIGIN}/api/notifications`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {

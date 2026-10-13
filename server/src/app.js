@@ -23,26 +23,26 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 const app = express();
+if (process.env.VERCEL) app.set('trust proxy', 1);
+const { isAllowedOrigin } = require('./utils/origins');
+const { getRedis } = require('./utils/redis');
+const { RedisStore } = require('rate-limit-redis');
+const rateStore = prefix => process.env.REDIS_URL ? new RedisStore({ prefix, sendCommand: async (...args) => (await getRedis()).sendCommand(args) }) : undefined;
 
 // Security headers (CSP, HSTS, XSS filter, etc.)
 app.use(helmet());
 
 // CORS — only the configured client origin may call the API
-const allowedOrigin = process.env.CLIENT_URL || 'http://localhost:5173';
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no Origin header (curl, Postman, server-to-server)
-    if (!origin) return callback(null, true);
-    if (origin === allowedOrigin) return callback(null, true);
-    callback(new Error('Not allowed by CORS'));
-  }
-}));
+app.use(cors((req, callback) => callback(null, {
+  origin: (origin, done) => isAllowedOrigin(origin, req) ? done(null, true) : done(Object.assign(new Error('Not allowed by CORS'), { status: 403 }))
+})));
 
 // JSON body parsing with a size limit
 app.use(express.json({ limit: '1mb' }));
 
 // Rate limiting — strict on auth (brute-force protection), gentler elsewhere
 const authLimiter = rateLimit({
+  store: rateStore('evently:auth:'),
   skip: req => req.method !== 'POST',
   windowMs: 15 * 60 * 1000,
   max: 20,
@@ -53,6 +53,7 @@ const authLimiter = rateLimit({
 app.use('/api/auth', authLimiter);
 
 const apiLimiter = rateLimit({
+  store: rateStore('evently:api:'),
   windowMs: 15 * 60 * 1000,
   max: 1000,
   standardHeaders: true,
@@ -60,7 +61,7 @@ const apiLimiter = rateLimit({
 });
 app.use('/api', apiLimiter);
 
-app.use('/uploads', (req, res, next) => { res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'); next(); }, express.static(path.join(__dirname, '../uploads')));
+if (!process.env.VERCEL) app.use('/uploads', (req, res, next) => { res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'); next(); }, express.static(path.join(__dirname, '../uploads')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventsRoutes);
@@ -90,4 +91,10 @@ app.use('/api', (req, res) => {
   });
 });
 
+app.use((error, req, res, next) => {
+  if (res.headersSent) return next(error);
+  const status = error.code === 'LIMIT_FILE_SIZE' ? 413 : error.status || (error.message?.startsWith('Only JPEG') ? 400 : 500);
+  if (status >= 500) console.error('[API error]', error.message);
+  res.status(status).json({ message: status === 413 ? 'Image must be smaller than 4 MB.' : status < 500 ? error.message : 'Internal server error' });
+});
 module.exports = app;

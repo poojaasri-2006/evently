@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../utils/config.js';
 import { apiFetch } from '../utils/api.js';
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -60,7 +61,7 @@ export const RegisterPage = () => {
     setLoading(true);
 
     try {
-      const response = await apiFetch('http://localhost:5000/api/auth/register', {
+      const response = await apiFetch(`${API_ORIGIN}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

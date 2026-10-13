@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { apiFetchFresh as apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
@@ -56,8 +57,8 @@ export const VendorProfile = () => {
       setError(null);
 
       const [profileRes, catRes] = await Promise.all([
-        apiFetch('http://localhost:5000/api/profile', { headers: { 'Authorization': `Bearer ${token}` } }),
-        apiFetch('http://localhost:5000/api/vendors/categories', { headers: { 'Authorization': `Bearer ${token}` } })
+        apiFetch(`${API_ORIGIN}/api/profile`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        apiFetch(`${API_ORIGIN}/api/vendors/categories`, { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
 
       if (!profileRes.ok) throw new Error('Failed to fetch profile');
@@ -105,9 +106,9 @@ export const VendorProfile = () => {
       return;
     }
 
-    // Validate size (5MB limit)
-    if (file.size > 5 * 1024 * 1024) {
-      setImageError('Image must be smaller than 5 MB.');
+    // Validate size (4MB limit)
+    if (file.size > 4 * 1024 * 1024) {
+      setImageError('Image must be smaller than 4 MB.');
       return;
     }
 
@@ -119,7 +120,7 @@ export const VendorProfile = () => {
       const formData = new FormData();
       formData.append('image', file);
 
-      const res = await apiFetch('http://localhost:5000/api/profile/vendor/image', {
+      const res = await apiFetch(`${API_ORIGIN}/api/profile/vendor/image`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -155,7 +156,7 @@ export const VendorProfile = () => {
       setUploadingImage(true);
       setImageError(null);
 
-      const res = await apiFetch('http://localhost:5000/api/profile/vendor', {
+      const res = await apiFetch(`${API_ORIGIN}/api/profile/vendor`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -185,7 +186,7 @@ export const VendorProfile = () => {
       setError(null);
       setSuccess(false);
 
-      const res = await apiFetch('http://localhost:5000/api/profile/vendor', {
+      const res = await apiFetch(`${API_ORIGIN}/api/profile/vendor`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -361,7 +362,7 @@ export const VendorProfile = () => {
                 Upload Business Logo or Cover Photo
               </p>
               <p style={{ margin: '0 0 1rem 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                Recommended: Square image (JPEG, PNG, WEBP, GIF). Max size: 5 MB.
+                Recommended: Square image (JPEG, PNG, WEBP, GIF). Max size: 4 MB.
               </p>
 
               <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>

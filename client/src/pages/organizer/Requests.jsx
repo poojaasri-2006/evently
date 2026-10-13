@@ -1,3 +1,4 @@
+import { API_ORIGIN } from '../../utils/config.js';
 import { useApiRevision } from '../../utils/useApiRevision';
 import { apiFetch } from '../../utils/api.js';
 import React, { useState, useEffect } from 'react';
@@ -31,7 +32,7 @@ export const Requests = () => {
       setError(null);
       const headers = { 'Authorization': `Bearer ${token}` };
       
-      const res = await apiFetch('http://localhost:5000/api/inquiries', { headers });
+      const res = await apiFetch(`${API_ORIGIN}/api/inquiries`, { headers });
       if (!res.ok) throw new Error('Failed to fetch requests');
       
       const data = await res.json();
@@ -55,7 +56,7 @@ export const Requests = () => {
     setActionMessage({ type: '', text: '' });
     
     try {
-      const res = await apiFetch(`http://localhost:5000/api/inquiries/${id}/cancel`, {
+      const res = await apiFetch(`${API_ORIGIN}/api/inquiries/${id}/cancel`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });
